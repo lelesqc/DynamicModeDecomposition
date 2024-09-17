@@ -154,14 +154,14 @@ from flowtorch.data import FOAMDataloader, mask_box
 path = DATASETS["of_cylinder2D_binary"]
 loader = FOAMDataloader(path)
 
-times = loader.write_times
+t_steps = loader.write_times
 fields = loader.field_names
 pts = loader.vertices[:, :2]    # Discard z-coordinate since simulation is only 2D
 
 # Vortex shedding is complete after 4s, keep only time steps between 4s and 10s
-time_steps = [float(t) for t in times if float(t) >= 4.0] 
+times = [t for t in t_steps if float(t) >= 4.0] 
 
-for t in time_steps:
+for t in times:
     snapshots = loader.load_snapshot("vorticity", t)
 ```
 In this way we retrieved data of interest from the dataset.
@@ -172,4 +172,65 @@ algorithm itself are well-known topics and libraries which do the whole job are 
 - [flowTorch.analysis](https://flowmodelingcontrol.github.io/flowtorch-docs/1.0/flowtorch.analysis.html)
 - [PyDMD](https://pydmd.github.io/PyDMD/code.html)
 
-Let's see how easily can *SVD* and *DMD* algorithms be implemented through *flowTorch* in a Jupyter Notebook:
+Let's see how easily can *SVD* and *DMD* algorithms be implemented through *flowTorch*:
+
+```python
+import numpy as np
+import torch as pt
+from functions import find_optimal_rank
+from flowtorch import DATASETS
+from flowtorch.data import FOAMDataloader, mask_box
+from flowtorch.analysis import SVD, DMD
+
+# -------------- CONFIGURATION -----------------
+
+path = DATASETS["of_cylinder2D_binary"]
+loader = FOAMDataloader(path)
+
+t_steps = loader.write_times
+fields = loader.field_names
+pts = loader.vertices[:, :2]    # Discard z-coordinate since simulation is only 2D
+
+# Vortex shedding is complete after 4s, keep only time steps between 4s and 10s
+times = [t for t in t_steps if float(t) >= 4]
+dt = round(float(times[1]) - float(times[0]), 3)
+
+mask = mask_box(pts, lower = [.1, -1], upper = [.75, 1])    # Boolean values matrix, 1 to keep, 0 to discard
+data_matrix = pt.zeros((pt.count_nonzero(mask), len(time_steps)), dtype = pt.float32)
+
+for i, t in enumerate(times):
+    snapshots = loader.load_snapshot("vorticity", t)
+    data_matrix[:, i] = pt.masked_select(snapshots[:, 2], mask)
+
+# -------------- DMD -----------------
+
+rank_datamatrix = min(data_matrix[:, :-1].size())
+svd = SVD(data_matrix[:, :-1], rank=rank_datamatrix)    # Reduced SVD on matrix X = data_matrix without last column
+singular_vals = svd.s
+
+thr = 99.5
+optimal_rank = find_optimal_rank(singular_vals, thr)
+dmd = DMD(data_matrix, dt = dt, rank=optimal_rank)
+
+
+"""
+MAIN PROPERTIES of flowtorch.analysis.SVD:
+- U    # Matrix of left singular vectors
+- V    # Matrix of right singular vectors
+- s    # Singular values
+- opt_rank    # Automatically computed optimal rank (didn't make use of it)
+
+MAIN PROPERTIES of flowtorch.analysis.DMD:
+- amplitude    # Amplitude of DMD modes
+- dynamics    # Time dynamics
+- eigvals 
+- eigvecs
+- frequency    # Frequency of DMD modes
+- modes    # DMD modes
+- reconstruction    # Data matrix re-obtained starting from DMD modes
+
+"""
+```
+
+These functions and properties of flowtorch.analysis are used in our testing module to verify results. This example is constructed through a unique implementation code
+(plotting of data and results excluded), while in DMD folder the different parts of the code (configuration, implementation, visualization) are displayed individually.
