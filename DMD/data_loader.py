@@ -4,11 +4,7 @@ from flowtorch.data import FOAMDataloader, mask_box
 from config import DATASET_NAME, MASK_LOWER_BOUND, MASK_UPPER_BOUND
 
 def load_data(dataset_path=None):
-    if dataset_path is None:
-        dataset = DATASETS[DATASET_NAME]
-    else:
-        dataset = dataset_path
-    
+    dataset = DATASETS[DATASET_NAME]
     loader = FOAMDataloader(dataset)
     times = loader.write_times
     fields = loader.field_names
