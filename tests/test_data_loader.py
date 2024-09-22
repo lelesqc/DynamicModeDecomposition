@@ -3,17 +3,31 @@ import torch as pt
 from data_loader import load_data, apply_mask
 
 def test_load_data_valid():
-    """Test che verifica il caricamento corretto dei dati."""
+    """
+    Test that checks the correct loading of data.
+    
+    This test checks that the 'load_data' function successfully loads the dataset and
+    returns non-empty variables.
+    It asserts that:
+    
+    - 'times' is not empty 
+    - 'fields' is not empty
+    - 'pts' contains grid vertices
+    
+    These data are needed for the simulation, incorrect loading of at least one of them causes an error.
+    
+    """
     loader, times, fields, pts = load_data()
     
     assert len(times) > 0, "Times list is empty"
     assert len(fields) > 0, "Fields dictionary is empty"
     assert pts.size(0) > 0, "Tensor containing grid vertices is empty"
 
-def test_load_data_empty():
-    """Test che verifica che venga sollevato un errore se i dati sono vuoti o malformati."""
-    with pytest.raises(ValueError):
-        load_data(dataset_path="non/existing/path")
+def test_load_data_incomplete():
+    """Test che verifica che venga sollevato un errore se una delle variabili di dati è vuota."""
+    
+    with pytest.raises(ValueError, match="One or more required data items are empty"):
+        load_data(simulate_empty=True)
 
 def test_apply_mask_valid():
     """Test che verifica l'applicazione della maschera sui punti."""
