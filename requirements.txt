@@ -2,3 +2,5 @@ numpy
 matplotlib
 torch >= 1.9
 flowtorch >= 0.1.0
+pytest
+pytest-cov
