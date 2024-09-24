@@ -64,6 +64,8 @@ or the [reduced one](https://cloud.tu-braunschweig.de/s/b9xJ7XSHMbdKwxH) ($\appr
 is given by the number of snapshots included for each dataset. Specifically, the one of interest is called *of_cylinder2D_binary*. It contains 401 snapshots of
 different vector/scalar fields (pressure, vorticity, surface flux and velocity) of a fluid past a 2D cylinder. Code takes into account the vorticity field.
 
+*N.B.*: the present repository, including functions, testing and the algorithm itself works only for the vorticity field. 
+
 ## Getting started
 Download one of the two available datasets (full or reduced) and place it in an arbitrary directory. The downloaded file is a compressed archive with extension *.tar.gz*. Now, take a look to the following instructions to install *flowTorch* and start using data:
 
