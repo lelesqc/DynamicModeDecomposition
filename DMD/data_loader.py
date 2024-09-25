@@ -9,7 +9,6 @@ def load_data(loader=None):
         loader = FOAMDataloader(dataset)
     
     times = loader.write_times
-    fields = loader.field_names
     pts = loader.vertices
 
     if pts.numel() == 0:
@@ -26,4 +25,4 @@ def load_data(loader=None):
     if isnan(pts).any():
         raise ValueError("One or more vertices value is NaN.") 
 
-    return times, fields, pts, loader
+    return times, pts, loader
