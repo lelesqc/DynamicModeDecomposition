@@ -1,6 +1,6 @@
 from numpy import isnan
 from flowtorch import DATASETS
-from flowtorch.data import FOAMDataloader, mask_box
+from flowtorch.data import FOAMDataloader
 from config import DATASET_NAME, MASK_LOWER_BOUND, MASK_UPPER_BOUND
 
 def load_data(loader=None):
@@ -26,6 +26,4 @@ def load_data(loader=None):
     if isnan(pts).any():
         raise ValueError("One or more vertices value is NaN.") 
 
-    mask = mask_box(pts, lower=MASK_LOWER_BOUND, upper=MASK_UPPER_BOUND)
-
-    return times, fields, pts, mask, loader
+    return times, fields, pts, loader
