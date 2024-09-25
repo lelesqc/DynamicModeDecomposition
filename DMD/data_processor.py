@@ -4,7 +4,7 @@ from config import DATASET_TYPE, MIN_TIME, FIELD_NAME
 from flowtorch.data import mask_box
 
 def process_data():
-    times, _, pts, loader = load_data()
+    times, pts, loader = load_data()
     mask = mask_box(pts, lower=MASK_LOWER_BOUND, upper=MASK_UPPER_BOUND)
 
     # In case the large dataset is used, only times greater than 4s are selected
