@@ -28,4 +28,4 @@ def load_data(loader=None):
 
     mask = mask_box(pts, lower=MASK_LOWER_BOUND, upper=MASK_UPPER_BOUND)
 
-    return times, fields, pts, mask
+    return times, fields, pts, mask, loader
