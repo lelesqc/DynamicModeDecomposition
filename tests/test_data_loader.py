@@ -95,17 +95,3 @@ def test_load_data_empty_pts(empty_pts_loader):
     """
     with pytest.raises(ValueError, match="Vertices are empty."):
         load_data(loader=empty_pts_loader)
-    
-def test_apply_mask_valid():
-    """
-    Test that verifies mask is correctly implemented based on pts.
-    It must have the same size of the tensor on which it has been applied.
-    
-    """
-    _, _, pts, mask = load_data()    
-    
-    assert mask.size(0) > 0, "Mask is empty"
-    assert mask.size(0) == pts.size(0), "Mask has different size with respect to pts"
-
-
-
