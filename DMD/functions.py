@@ -1,12 +1,12 @@
 def find_optimal_rank(s, thr):
-        tot = 0
-        s_relative = [s_i / s.sum() * 100 for s_i in s]   
-    
-        for i in range(len(s_relative)):
-            tot += s_relative[i]
-    
-            if tot >= thr:
-                optimal_rank = i
-                break
-    
-        return optimal_rank
+    if thr <= 0:
+        raise ValueError("Threshold must be positive")
+
+    elif thr > 100:
+        raise ValueError("Threshold must be less or equal than 100")
+
+    s_relative = (s / s.sum() * 100)
+    s_cumsum = pt.cumsum(s_relative, dim=0)
+
+    optimal_rank = pt.where(s_cumsum >= thr)[0][0].item()
+    return optimal_rank
