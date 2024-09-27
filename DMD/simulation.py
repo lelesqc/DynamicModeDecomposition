@@ -1,16 +1,15 @@
 import logging
 import torch as pt
-import numpy as np
-from flowtorch.analysis import SVD
+from numpy import pi
 from functions import find_optimal_rank
+from flowtorch.analysis import SVD
+from data_loader import load_data
 from data_processor import process_data
 
 logger = logging.getLogger(__name__)
 
 def run_DMD():
     _, t_steps, dt, data_matrix = process_data() 
-    if data_matrix.dtype not in (pt.complex64, pt.complex128):
-        data_matrix = data_matrix.type(pt.cfloat)
     
     # Matrices X and X' won't be defined, slicing on data_matrix will be used instead
     rank = min(data_matrix[:, :-1].size())
@@ -41,8 +40,7 @@ def run_DMD():
     phi = data_matrix[:, 1:] @ Vr.conj().T @ sr_inv @ eig_vec
         
     for i in range(eig_val.size(0)):
-        freq = round(float(pt.log(eig_val[i]).imag/(2.0 * np.pi * dt)), 3)
-        print(f"Frequency of mode", i, "is", freq, "Hz")
+        print(f"Frequency of mode", i, "is", pt.log(eig_val[i]).imag/(2.0 * pi * dt), "Hz")
 
     logger.info("Reconstructing data through DMD modes and computing the error...")
 
@@ -50,3 +48,5 @@ def run_DMD():
     vander_matrix = pt.vander(eig_val, len(t_steps), increasing = True)
     dynamics = pt.diag(b) @ vander_matrix
     reconstruction = phi @ dynamics
+
+    return eig_val, eig_vec, phi, reconstruction
