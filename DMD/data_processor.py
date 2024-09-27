@@ -1,6 +1,6 @@
 import torch as pt
 from data_loader import load_data
-from config import DATASET_TYPE, MIN_TIME, FIELD_NAME
+from config import FIELD_NAME, MASK_LOWER_BOUND, MASK_UPPER_BOUND
 from flowtorch.data import mask_box
 
 def process_data():
@@ -21,7 +21,7 @@ def process_data():
         # Vorticity is defined as the curl of velocity, it has non-zero values only along z-axis
         data_matrix[:, idx] = pt.masked_select(snapshots[:, 2], mask)
 
-    if data_matrix.dtype not in (pt.complex32, pt.complex64, pt.complex128):
-    data_matrix = data_matrix.type(pt.cfloat)
+    if data_matrix.dtype not in (pt.complex64, pt.complex128):
+        data_matrix = data_matrix.type(pt.cfloat)
             
     return mask, t_steps, dt, data_matrix
