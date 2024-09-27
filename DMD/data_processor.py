@@ -20,5 +20,8 @@ def process_data():
       
         # Vorticity is defined as the curl of velocity, it has non-zero values only along z-axis
         data_matrix[:, idx] = pt.masked_select(snapshots[:, 2], mask)
+
+    if data_matrix.dtype not in (pt.complex32, pt.complex64, pt.complex128):
+    data_matrix = data_matrix.type(pt.cfloat)
             
     return mask, t_steps, dt, data_matrix
