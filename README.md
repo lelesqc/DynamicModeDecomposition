@@ -235,4 +235,4 @@ MAIN PROPERTIES of flowtorch.analysis.DMD:
 ```
 
 These functions and properties of flowtorch.analysis are used in our testing module to verify results. This example is constructed through a unique implementation code
-(plotting of data and results excluded), while in DMD folder the different parts of the code (configuration, implementation, visualization) are displayed individually.
+(plotting of data and results excluded), while in DMD folder the different parts of the code (configuration, data loading etc.) are displayed individually.
