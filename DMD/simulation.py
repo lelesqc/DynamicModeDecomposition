@@ -3,7 +3,6 @@ import torch as pt
 from numpy import pi
 from functions import find_optimal_rank
 from flowtorch.analysis import SVD
-from data_loader import load_data
 from data_processor import process_data
 
 logger = logging.getLogger(__name__)
