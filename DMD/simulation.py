@@ -48,4 +48,4 @@ def run_DMD():
     dynamics = pt.diag(b) @ vander_matrix
     reconstruction = phi @ dynamics
 
-    return eig_val, eig_vec, phi, reconstruction
+    return eig_val, eig_vec, phi, dynamics, reconstruction
