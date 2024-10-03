@@ -64,7 +64,9 @@ or the [reduced one](https://cloud.tu-braunschweig.de/s/b9xJ7XSHMbdKwxH) ($\appr
 is given by the number of snapshots included for each dataset. Specifically, the one of interest is called *of_cylinder2D_binary*. It contains 401 snapshots of
 different vector/scalar fields (pressure, vorticity, surface flux and velocity) of a fluid past a 2D cylinder. Code takes into account the vorticity field.
 
-*N.B.*: the present repository, including functions, testing and the algorithm itself works only for the vorticity field. 
+*Disclaimer*: the present repository, including functions, testing and the algorithm itself works only for the vorticity field. 
+
+Furthermore, code is mainly meant to show a panorama of the Dynamic Mode Decomposition algorithm, specifically for its implementation and results visualization. For this reason, there's no much freedom on code flow, such as input values that user can insert are not present (e.g. for the choice of the threshold value in SVD. See *DMD/simulation*). Choices of this kind have been made during the study of the algorithm and the analysis of the dataset used; anyway, user can decide to modify variables arbitrarily to explore different scenarios.
 
 ## Getting started
 Download one of the two available datasets (full or reduced) and place it in an arbitrary directory. The downloaded file is a compressed archive with extension *.tar.gz*. Now, take a look to the following instructions to install *flowTorch* and start using data:
