@@ -170,6 +170,28 @@ for t in times:
 ```
 In this way we retrieved data of interest from the dataset.
 
+## Repository structure
+The present repository contains the following files and folders:
+- *.gitignore*
+- *README.md*
+- *LICENSE*
+- *requirements.txt* -> follow above instructions to install
+- *DMD* folder -> contains the source code of the Dynamic Mode Decomposition algorithm, divided into:
+    - *config.py* -> contains constant variables
+    - *data_loader.py* -> code section responsible for the loading of data that will be used
+    - *data_processor.py* -> code section responsible for the processing of loaded data
+    - *functions.py* -> contains the (only) function used in the simulation module
+    - *plotter.py* -> contains the class **Plotter**, whose methods are used for data and results visualization
+    - *simulation.py* -> the DMD algorithm itself
+
+- *tests* folder -> contains the different tests for the various modules of the code. Each file name refers to the specific module tested:
+    - *test_data_loader.py*
+    - *test_data_processor.py*
+    - *test_functions.py*
+    - *test_plotter.py*
+    - *test_simulation.py*
+ 
+
 ## Implementation of an easier version
 The code provided in our example manually perform the algorithm, by translating the theoretical approach we have seen above into code. However, *SVD* and *DMD*
 algorithm itself are well-known topics and libraries which do the whole job are already existing. Some examples of these modules are
@@ -236,5 +258,5 @@ MAIN PROPERTIES of flowtorch.analysis.DMD:
 """
 ```
 
-These functions and properties of flowtorch.analysis are used in our testing module to verify results. This example is constructed through a unique implementation code
-(plotting of data and results excluded), while in DMD folder the different parts of the code (configuration, data loading etc.) are displayed individually.
+These functions and properties of *flowtorch.analysis* are used in our testing module to verify results. This example is constructed through a unique implementation code
+(plotting of data and results excluded), while in *DMD* folder the different parts of the code (configuration, data loader etc.) are displayed individually.
