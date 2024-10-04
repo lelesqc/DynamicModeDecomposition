@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import torch as pt
 import numpy as np
+import warnings
 from data_processor import process_data
 
 class Plotter:     
@@ -11,7 +12,9 @@ class Plotter:
         Parameters:
             pts (torch.FloatTensor): Vertices of the grid.
             mask (torch.BoolTensor): Matrix of 0s and 1s to restrict data.
-            
+            data_matrix (torch.FloatTensor): Matrix of data, could be vorticity, velocity etc.
+            time_steps (list): List of time steps of the system state.
+
         Methods:
             scatter_plot: Produces a scatter plot of the grid's vertices.
             plot_data(ax, data, title): Creates a filled contour plot with additional contour lines and a circle patch on the given axis.
@@ -27,9 +30,11 @@ class Plotter:
     def scatter_plot(self):                   
         """
         Produces a scatter plot of the grid's vertices.
-        
+
+        No parameters needed.
+            
         """     
-        # Only one in 4 values are selected to enhance clarity of plot
+        # Only 4 values are selected to enhance clarity of plots
         every = 4
         
         fig, ax = plt.subplots()
@@ -46,6 +51,9 @@ class Plotter:
             data (torch.Tensor): Data array to be visualized
             title (str or Any): Title of the plot, will be converted to string if necessary
         
+        Returns:
+            contourf (matplotlib.contour.QuadContourSet): The filled contour plot object.     
+
         Raises:
             ValueError: If data shape doesn't match the number of points of the axes. 
 
@@ -54,7 +62,7 @@ class Plotter:
 
         x = pt.masked_select(self.pts[:, 0], self.mask)
         y = pt.masked_select(self.pts[:, 1], self.mask)
-
+        
         if data.size(0) != x.size(0):
             raise ValueError("Size of data must match the number of points on plot's axes.")
 
@@ -137,8 +145,8 @@ class Plotter:
             times (list): Time steps to be plotted
 
         Raises:
-            ValueError: If `times` is empty
             ValueError: If `reconstruction` and `data_matrix` have different dimensions
+            ValueError: If `times` is empty
     
         """ 
         if isinstance(times, int):
@@ -161,7 +169,7 @@ class Plotter:
 
         plt.tight_layout()
 
-    def reconstruction_error(time_steps, mse_dmd):    
+    def reconstruction_error(self, time_steps, mse_dmd):    
         """
         Plots the Mean Square Error (MSE) of reconstructed data with respect to original ones.
 
@@ -182,6 +190,10 @@ class Plotter:
         plt.plot(time_steps, mse_dmd, label = "MSE")
         plt.xlabel('Time')
         plt.ylabel('Mean Square Error')
+        plt.xlim(time_steps[0], time_steps[-1])
+        plt.legend()
+        plt.title('Mean Squared Error vs Time')
+        plt.tight_layout()        
         plt.xlim(time_steps[0], time_steps[-1])
         plt.legend()
         plt.title('Mean Squared Error vs Time')
