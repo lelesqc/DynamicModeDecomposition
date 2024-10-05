@@ -12,8 +12,8 @@ class Plotter:
         Parameters:
             pts (torch.FloatTensor): Vertices of the grid.
             mask (torch.BoolTensor): Matrix of 0s and 1s to restrict data.
-            data_matrix (torch.FloatTensor): Matrix of vorticity values.
-            time_steps (list): List of time steps used.
+            data_matrix (torch.FloatTensor): Matrix of data, could be vorticity, velocity etc.
+            time_steps (list): List of time steps of the system state.
 
         Methods:
             scatter_plot: Produces a scatter plot of the grid's vertices.
@@ -135,24 +135,25 @@ class Plotter:
         axarr[-1].set_xlim(time_steps[0], time_steps[-1])
         axarr[0].set_title("time dynamics")
 
-    def data_reconstruction(self, data_matrix, reconstruction, times):
+    def data_reconstruction(self, data_matrix, reconstruction, t_idx, time_steps):
         """
         Plots both original and reconstructed data for comparison.
 
         Parameters:
             data_matrix (torch.Tensor): Original matrix of data
             reconstruction (torch.Tensor): Reconstructed data tensor through found DMD modes
-            times (list): Time steps to be plotted
+            t_idx (list): Indices of time steps to be plotted
+            time_steps (list): Time steps available
 
         Raises:
             ValueError: If `reconstruction` and `data_matrix` have different dimensions
-            ValueError: If `times` is empty
+            ValueError: If `t_idx` is empty
     
         """ 
-        if isinstance(times, int):
-            times = [times]        
-        elif len(times) == 0:
-            raise ValueError("`times` must contain at least one time-step to plot.")
+        if isinstance(t_idx, int):
+            t_idx = [t_idx]        
+        elif len(t_idx) == 0:
+            raise ValueError("`t_idx` must contain at least one time-step to plot.")
         
         if reconstruction.size() != data_matrix.size():
             raise ValueError("`reconstruction` and `data_matrix` must have the same shape.")
@@ -160,12 +161,12 @@ class Plotter:
         x = pt.masked_select(self.pts[:, 0], self.mask)
         y = pt.masked_select(self.pts[:, 1], self.mask)
 
-        fig, axarr = plt.subplots(len(times), 2, figsize = (14, 8), sharex = True, sharey = True)
+        fig, axarr = plt.subplots(len(t_idx), 2, figsize = (14, 8), sharex = True, sharey = True)
         axarr = np.atleast_2d(axarr)
     
-        for i, idx in enumerate(times):
-            self.plot_data(axarr[i, 0], data_matrix[:, idx], f"original, t = {idx}s")
-            self.plot_data(axarr[i, 1], reconstruction[:, idx], f"DMD, t = {idx}s")
+        for i, idx in enumerate(t_idx):
+            self.plot_data(axarr[i, 0], data_matrix[:, idx], f"original, t = {time_steps[idx]}s")
+            self.plot_data(axarr[i, 1], reconstruction[:, idx], f"DMD, t = {time_steps[idx]}s")
 
         plt.tight_layout()
 
@@ -193,4 +194,4 @@ class Plotter:
         plt.xlim(time_steps[0], time_steps[-1])
         plt.legend()
         plt.title('Mean Squared Error vs Time')
-        plt.tight_layout()  
+        plt.tight_layout()          
