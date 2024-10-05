@@ -4,6 +4,24 @@ from flowtorch.data import FOAMDataloader
 from config import DATASET_NAME
 
 def load_data(loader=None):
+    """
+    Function that loads data of the chosen dataset and verifies their integrity.
+
+    Parameters:
+        loader (FOAMDataloader, optional): FOAMDataloader object. It is set different from None in tests, otherwise defined as the loader of the default dataset.
+
+    Returns:
+        times (list): List of time steps available as strings.
+        pts (torch.FloatTensor): Vertices of the grid.
+        loader (FOAMDataloader): Chosen FOAMDataloader object.
+
+    Raises:
+        ValueError: If `pts` is empty
+        ValueError: If `times` is empty
+        ValueError: If `pts` tensor contains NaN values.
+
+    """
+    
     if loader is None:
         dataset = DATASETS[DATASET_NAME]
         loader = FOAMDataloader(dataset)
@@ -18,9 +36,6 @@ def load_data(loader=None):
 
     if not times:
         raise ValueError("Time steps are empty.")
-    
-    if not fields:
-        raise ValueError("No fields available in the dataset.")
 
     if isnan(pts).any():
         raise ValueError("One or more vertices value is NaN.") 
