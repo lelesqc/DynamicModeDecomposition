@@ -18,10 +18,10 @@ class Plotter:
         Methods:
             scatter_plot: Produces a scatter plot of the grid's vertices.
             plot_data(ax, data, title): Creates a filled contour plot with additional contour lines and a circle patch on the given axis.
-            plot_DMD_modes(axarr, phi, index): Plots the found DMD modes.
-            time_dynamics(optimal_rank, X_dynamics): Plots the time evolution of each mode.
-            data_reconstruction(X_dmd, times): Plots both original and reconstructed data for comparison.
-            reconstruction_error(MSE_dmd): Plots the Mean Square Error (MSE) of reconstructed data with respect to original ones.
+            plot_DMD_modes(phi, mode_indices): Plots the found DMD modes.
+            time_dynamics(optimal_rank, dynamics, time_steps): Plots the time evolution of each mode.
+            data_reconstruction(data_matrix, reconstruction, t_idx, time_steps): Plots both original and reconstructed data for comparison.
+            reconstruction_error(time_steps, mse_dmd): Plots the Mean Square Error (MSE) of reconstructed data with respect to original ones.
 
         """
         self.pts = pts
@@ -106,7 +106,7 @@ class Plotter:
 
         plt.tight_layout()
 
-    def time_dynamics(self, optimal_rank, dynamics, time_steps): 
+    def time_dynamics(optimal_rank, dynamics, time_steps): 
         """
         Plots the time evolution of each mode.
 
@@ -170,7 +170,7 @@ class Plotter:
 
         plt.tight_layout()
 
-    def reconstruction_error(self, time_steps, mse_dmd):    
+    def reconstruction_error(time_steps, mse_dmd):    
         """
         Plots the Mean Square Error (MSE) of reconstructed data with respect to original ones.
 
