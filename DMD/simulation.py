@@ -10,9 +10,32 @@ logging.basicConfig(level=logging.INFO, format='%(message)s')
 logger = logging.getLogger(__name__)
 
 def run_DMD():
+    """
+    Function that runs the DMD algorithm.
+
+    Steps:
+        1. Retrieves data
+        2. Computes the SVD on data matrix X
+        3. Computes the optimal rank for truncation
+        4. Computes the reduced linear operator through reduced matrices
+        5. Extracts eigenvecs and use them to compute DMD modes
+        6. Reconstruct the original data matrix X through the found modes
+        7. Computes the error made in reconstruction
+
+    Returns:
+        optimal_rank (int): Optimal rank computed to truncate matrices
+        eig_val (torch.Tensor): Eigenvalues of the reduced operator
+        eig_vec (torch.Tensor): Eigenvectors of the reduced operator
+        phi (torch.Tensor): Computed DMD modes
+        dynamics (torch.Tensor): Time dynamics
+        reconstruction (torch.Tensor): Data matrix reconstruction through DMD modes
+        mse (torch.Tensor): Computed Mean Squared Error in data reconstruction
+
+    """    
     _, t_steps, dt, data_matrix = process_data() 
     
-    # Matrices X and X' won't be defined, slicing on data_matrix will be used instead
+    # Matrices X (= data_matrix[:, :-1]) and X' (= data_matrix[1:, :]) won't be defined
+    # Slicing will be used instead
     rank = min(data_matrix[:, :-1].size())
     logger.info(f"The rank of matrix A is: {rank}\n")
 
@@ -53,7 +76,7 @@ def run_DMD():
     reconstruction = phi @ dynamics
 
     reconstruction_error = (data_matrix - reconstruction) ** 2
-    mse = reconstruction_error.mean(axis = 0)
+    mse = reconstruction_error.mean(axis = 0)    # Mean Squared Error
 
     logger.info("Reconstruction completed. \n")
 
