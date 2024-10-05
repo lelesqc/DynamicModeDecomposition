@@ -106,7 +106,7 @@ class Plotter:
 
         plt.tight_layout()
 
-    def time_dynamics(optimal_rank, dynamics, time_steps): 
+    def time_dynamics(self, optimal_rank, dynamics, time_steps): 
         """
         Plots the time evolution of each mode.
 
@@ -170,7 +170,7 @@ class Plotter:
 
         plt.tight_layout()
 
-    def reconstruction_error(time_steps, mse_dmd):    
+    def reconstruction_error(self, time_steps, mse_dmd):    
         """
         Plots the Mean Square Error (MSE) of reconstructed data with respect to original ones.
 
@@ -188,7 +188,7 @@ class Plotter:
             raise ValueError("`mse_dmd` must be of the same size as `time_steps`.")
         
         plt.figure(figsize = (10, 6))
-        plt.plot(time_steps, mse_dmd, label = "MSE")
+        plt.plot(time_steps, mse_dmd.real, label = "MSE")
         plt.xlabel('Time')
         plt.ylabel('Mean Square Error')
         plt.xlim(time_steps[0], time_steps[-1])
