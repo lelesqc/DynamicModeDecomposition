@@ -1,7 +1,7 @@
 from numpy import isnan
 from flowtorch import DATASETS
 from flowtorch.data import FOAMDataloader
-from config import DATASET_NAME, MASK_LOWER_BOUND, MASK_UPPER_BOUND
+from config import DATASET_NAME
 
 def load_data(loader=None):
     if loader is None:
