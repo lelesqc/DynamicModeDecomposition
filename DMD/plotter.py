@@ -178,7 +178,7 @@ class Plotter:
             mse_dmd (torch.Tensor): Tensor with the computed Mean Square Error for reconstructed and original data
 
         Raises:
-            ValueError: If `mse_dmd` has not the same length as `self.time_steps`
+            ValueError: If `mse_dmd` has not the same length as `time_steps`
         
         """      
         time_steps = [float(t) for t in time_steps]
@@ -193,8 +193,4 @@ class Plotter:
         plt.xlim(time_steps[0], time_steps[-1])
         plt.legend()
         plt.title('Mean Squared Error vs Time')
-        plt.tight_layout()        
-        plt.xlim(time_steps[0], time_steps[-1])
-        plt.legend()
-        plt.title('Mean Squared Error vs Time')
-        plt.tight_layout()        
+        plt.tight_layout()  
