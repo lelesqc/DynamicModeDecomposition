@@ -12,8 +12,8 @@ class Plotter:
         Parameters:
             pts (torch.FloatTensor): Vertices of the grid.
             mask (torch.BoolTensor): Matrix of 0s and 1s to restrict data.
-            data_matrix (torch.FloatTensor): Matrix of data, could be vorticity, velocity etc.
-            time_steps (list): List of time steps of the system state.
+            data_matrix (torch.FloatTensor): Matrix of vorticity values.
+            time_steps (list): List of time steps used.
 
         Methods:
             scatter_plot: Produces a scatter plot of the grid's vertices.
