@@ -4,6 +4,16 @@ from config import FIELD_NAME, MASK_LOWER_BOUND, MASK_UPPER_BOUND
 from flowtorch.data import mask_box
 
 def process_data():
+    """
+    Function that takes loaded data and process them.
+
+    Returns:
+        mask (torch.BoolTensor): Matrix of 0s and 1s to restrict data.
+        t_steps (list): List of time steps used.
+        dt (float): Time interval between adjacent time steps.
+        data_matrix (torch.FloatTensor): Matrix of vorticity values.
+        
+    """
     times, pts, loader = load_data()
     mask = mask_box(pts, lower=MASK_LOWER_BOUND, upper=MASK_UPPER_BOUND)
 
