@@ -1,12 +1,17 @@
 import matplotlib
 matplotlib.use('Agg')
-import pytest
+
 import torch as pt
 import matplotlib.pyplot as plt
-from data_loader import load_data
-from data_processor import process_data
-from plotter import Plotter
-from run_DMD import run_DMD
+import pytest
+import sys
+import os
+from DMD.data_loader import load_data
+from DMD.data_processor import process_data
+from DMD.plotter import Plotter
+from DMD.simulation import run_DMD
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 @pytest.fixture
 def plotter():
@@ -17,8 +22,8 @@ def plotter():
 @pytest.fixture
 def data_fixture():
     _, _, _, _, _, reconstruction, _ = run_DMD()
-    _, _, _, data_matrix = process_data()
-    return data_matrix, reconstruction
+    _, t_steps, _, data_matrix = process_data()
+    return data_matrix, reconstruction, t_steps
 
 def test_plot_data_invalid_data_length(plotter):
     """
@@ -66,29 +71,31 @@ def test_plot_DMD_modes_single_index(plotter):
     
     plotter.plot_DMD_modes(phi, mode_indices)        
 
-def test_data_reconstruction_empty_times(plotter):
+def test_data_reconstruction_empty_times(plotter, data_fixture):
     """
-    Test that verifies the correct raise of an error if `times` is empty
+    Test that verifies the correct raise of an error if `t_idx` is empty
 
     """    
     data_matrix = pt.rand(10, 10) 
     reconstruction = pt.rand(10, 10)
-    times = []
+    _, _, t_steps = data_fixture
+    t_idx = []
 
-    with pytest.raises(ValueError, match="`times` must contain at least one time-step to plot."):
-        plotter.data_reconstruction(data_matrix, reconstruction, times)
+    with pytest.raises(ValueError, match="`t_idx` must contain at least one time-step to plot."):
+        plotter.data_reconstruction(data_matrix, reconstruction, t_idx, t_steps)
 
-def test_data_reconstruction_wrong_shapes(plotter):
+def test_data_reconstruction_wrong_shapes(plotter, data_fixture):
     """
     Test that verifies the correct raise of an error if `data_matrix` and `reconstruction` have different sizes.
 
     """
     data_matrix = pt.rand(10, 10)  
     reconstruction = pt.rand(8, 10)
+    _, _, t_steps = data_fixture
     times = [0, 1, 2]
 
     with pytest.raises(ValueError, match="`reconstruction` and `data_matrix` must have the same shape."):
-        plotter.data_reconstruction(data_matrix, reconstruction, times)
+        plotter.data_reconstruction(data_matrix, reconstruction, times, t_steps)
 
 def test_data_reconstruction_single_time(plotter, data_fixture):
     """
@@ -96,12 +103,12 @@ def test_data_reconstruction_single_time(plotter, data_fixture):
     Raises an exception in case of unexpected behaviour.
 
     """
-    data_matrix, reconstruction = data_fixture
+    data_matrix, reconstruction, t_steps = data_fixture
     data_matrix, reconstruction = data_matrix.real, reconstruction.real
     times = 3
 
     try:
-        plotter.data_reconstruction(data_matrix, reconstruction, times)
+        plotter.data_reconstruction(data_matrix, reconstruction, times, t_steps)
     except Exception as e:
         pytest.fail(f"Function raised an expected exception: {e}")
 
