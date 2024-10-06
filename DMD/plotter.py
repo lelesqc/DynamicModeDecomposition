@@ -1,8 +1,7 @@
 import matplotlib.pyplot as plt
 import torch as pt
 import numpy as np
-import warnings
-from data_processor import process_data
+from DMD.data_processor import process_data
 
 class Plotter:     
     def __init__(self, pts, mask):          
