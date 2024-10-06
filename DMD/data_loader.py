@@ -1,7 +1,7 @@
 from numpy import isnan
 from flowtorch import DATASETS
 from flowtorch.data import FOAMDataloader
-from config import DATASET_NAME
+from DMD.config import DATASET_NAME
 
 def load_data(loader=None):
     """
@@ -37,6 +37,10 @@ def load_data(loader=None):
     if not times:
         raise ValueError("Time steps are empty.")
 
+    if isnan(pts).any():
+        raise ValueError("One or more vertices value is NaN.") 
+
+    return times, pts, loader
     if isnan(pts).any():
         raise ValueError("One or more vertices value is NaN.") 
 
