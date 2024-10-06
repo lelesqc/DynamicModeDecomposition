@@ -50,11 +50,35 @@ development (e.g., the absolute value of eigenvalues tells if the corresponding 
 The generic formula that allows to retrieve the state vector $x_n$ is
 
 $$
-x_n = \Phi \Lambda^n \Phi^{-1} x_0
+x_n = \Phi \Lambda^n b
 $$
 
-where $\Lambda$ is the matrix of eigenvalues. 
+where $\Lambda$ is the matrix of eigenvalues and 
 
+$$
+b = \Phi^{-1} x_0
+$$
+
+## Repository structure
+The present repository contains the following files and folders:
+- *.gitignore*
+- *README.md*
+- *LICENSE*
+- *requirements.txt*
+- *DMD* folder -> contains the source code of the Dynamic Mode Decomposition algorithm, divided into:
+    - *config.py* -> contains constant variables
+    - *data_loader.py* -> code section responsible for the loading of data that will be used
+    - *data_processor.py* -> code section responsible for the processing of loaded data
+    - *functions.py* -> contains the (only) function used in the simulation module
+    - *plotter.py* -> contains the class **Plotter**, whose methods are used for data and results visualization
+    - *simulation.py* -> the DMD algorithm itself
+
+- *tests* folder -> contains the different tests for the various modules of the code. Each file name refers to the specific module tested:
+    - *test_data_loader.py*
+    - *test_data_processor.py*
+    - *test_functions.py*
+    - *test_plotter.py*
+    - *test_simulation.py*
 
 # Data
 The present project has been realized through the application of the *DMD* algorithm to a simulated fluid dynamics dataset. Data belongs to a Python library 
@@ -69,49 +93,42 @@ different vector/scalar fields (pressure, vorticity, surface flux and velocity) 
 Furthermore, code is mainly meant to show a panorama of the Dynamic Mode Decomposition algorithm, specifically for its implementation and results visualization. For this reason, there's no much freedom on code flow, such as input values that user can insert are not present. This is due to a prior study and analysis of data to ensure the best results in terms of efficiency (e.g. the choice of 99.5% as the threshold value for SVD truncation allows to cut data as much as possible with the minimum loss of information. See *DMD/simulation.py*); anyway, user can decide to modify variables arbitrarily to explore different scenarios.
 
 ## Getting started
-Download one of the two available datasets (full or reduced) and place it in an arbitrary directory. The downloaded file is a compressed archive with extension *.tar.gz*. Now, take a look to the following instructions to install *flowTorch* and start using data:
-
-### Linux
-The easiest way is via *pip*:
-
+In a prompt, navigate in an arbitrary directory and clone the repository by running the following command:
 ```git
-# install via pip
+git clone https://github.com/lelesqc/DynamicModeDecomposition
+```
+Navigate into the project directory
+```git
+cd DynamicModeDecomposition
+```
+and install requirements by running:
+```git
+pip install -r requirements.txt
+```
+This command will automatically download *flowTorch* from its original repository, ensuring the complete download of the latest version of the library. This is because the *PyPI* repository of Python libraries isn't updated to the most recent version.
+Alternatively, *flowTorch* can be downloaded manually by running
+```git
 pip3 install git+https://github.com/FlowModelingControl/flowtorch
 # or install a specific branch, e.g., aweiner
 pip3 install git+https://github.com/FlowModelingControl/flowtorch.git@aweiner
-
-# to uninstall flowTorch, run
-pip3 uninstall flowtorch
 ```
+For further information, user can visit this [link](https://github.com/FlowModelingControl/flowtorch).
 
-Alternatively, the repository can be cloned manually:
-
+Now, if not done yet, download Jupyter Notebook (to run the main code, which is a *.ipynb* file) through:
 ```git
-git clone git@github.com:FlowModelingControl/flowtorch.git
+pip install jupyter
 ```
-and install the dependencies contained in [*requirements.txt*](https://github.com/FlowModelingControl/flowtorch/blob/main/requirements.txt):
+Before proceeding, data have to be downloaded as well.
 
-```git
-pip3 install -r requirements.txt
-```
-All *flowTorch* dependencies download requires a significant amount of disk space, so one can try to install only the required sub-packages by trial-and-error.
-To load the library package from within a Python script file or a Jupyter notebook, add the path to the cloned repository as follows:
+Choose one of the two available datasets (full or reduced), download it from the link above and place it in an arbitrary directory. The downloaded file is a compressed archive with extension *.tar.gz*. Now, to extract the archive run the following commands:
 
-```python
-import sys
-sys.path.insert(0, "/path/to/repository")
-```
-
-At this point, if *flowTorch* has been successfully installed, let's see how to use data. Navigate into the repository where the dataset has been placed and run the
-following commands to extract the archive:
-
+### Linux
 ```git
 # full dataset
 tar xzf datasets_13_09_2022.tar.gz
 # reduced dataset
 tar xzf datasets_minimal_13_09_2022.tar.gz
 ```
-
 To tell *flowTorch* where the datasets are located, define the *FLOWTORCH_DATASETS* environment variable:
 
 ```git
@@ -124,12 +141,7 @@ echo "export FLOWTORCH_DATASETS=\"$(pwd)/datasets_minimal/\"" >> ~/.bashrc
 # reload bashrc
 . ~/.bashrc
 ```
-
-
 ### Windows 10/11
-The *flowTorch* download can be done in the same exact way of a Linux server via *pip* or by cloning the repository. 
-The extraction of the archive can be easily performed directly with the command line. First, navigate into the directory where the *.tar.gz* is saved and run:
-
 ```git
 # full dataset
 tar -xf datasets_13_09_2022.tar.gz
@@ -148,8 +160,16 @@ echo %FLOWTORCH_DATASETS%
 ```
 This command should print the path to the datasets folder.
 
+### Run the simulation
+If all the previous steps have been completed, user can already see the notebook outputs by opening it or re-run the simulation and see results.
+While being on the project directory, run:
+```git
+jupyter notebook
+```
+and open *DMD\main.ipynb* to see the notebook.
+
 ### Access to data in Python
-Now that data have been downloaded and set, let's see how to make use of it in Python:
+If user wants to access data on its own, let's see how to use them in Python:
 
 ```python
 from flowtorch import DATASETS
@@ -168,29 +188,7 @@ times = [t for t in t_steps if float(t) >= 4.0]
 for t in times:
     snapshots = loader.load_snapshot("vorticity", t)
 ```
-In this way we retrieved data of interest from the dataset.
-
-## Repository structure
-The present repository contains the following files and folders:
-- *.gitignore*
-- *README.md*
-- *LICENSE*
-- *requirements.txt* -> follow above instructions to install
-- *DMD* folder -> contains the source code of the Dynamic Mode Decomposition algorithm, divided into:
-    - *config.py* -> contains constant variables
-    - *data_loader.py* -> code section responsible for the loading of data that will be used
-    - *data_processor.py* -> code section responsible for the processing of loaded data
-    - *functions.py* -> contains the (only) function used in the simulation module
-    - *plotter.py* -> contains the class **Plotter**, whose methods are used for data and results visualization
-    - *simulation.py* -> the DMD algorithm itself
-
-- *tests* folder -> contains the different tests for the various modules of the code. Each file name refers to the specific module tested:
-    - *test_data_loader.py*
-    - *test_data_processor.py*
-    - *test_functions.py*
-    - *test_plotter.py*
-    - *test_simulation.py*
- 
+In this way data of interest can be retrieved from the dataset.
 
 ## Implementation of an easier version
 The code provided in our example manually perform the algorithm, by translating the theoretical approach we have seen above into code. However, *SVD* and *DMD*
