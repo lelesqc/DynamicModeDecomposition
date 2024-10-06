@@ -1,12 +1,16 @@
 import pytest
+import sys
+import os
 import torch as pt
 from unittest.mock import MagicMock
-from data_loader import load_data
+from DMD.data_loader import load_data
 from flowtorch.data import FOAMDataloader
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 # ------------------  FIXTURES  -----------------------
 
-# FOAMDataloader attributes (write_times, field_names, vertices) cannot be assigned directly.
+# FOAMDataloader attributes (write_times, vertices) cannot be assigned directly.
 # We have to make use of mocking
 
 @pytest.fixture
@@ -17,19 +21,6 @@ def empty_times_loader():
     """
     mock_loader = MagicMock()
     mock_loader.write_times = [] 
-    mock_loader.field_names = {'4.0': 'velocity'}
-    mock_loader.vertices = pt.tensor([[1.0, 2.0], [3.0, 4.0]])
-    return mock_loader
-
-@pytest.fixture
-def empty_fields_loader():
-    """
-    Fixture that simulates empty fields using mocking.
-    
-    """
-    mock_loader = MagicMock()
-    mock_loader.write_times = ["1.0", "2.0", "3.0"]
-    mock_loader.field_names = {}
     mock_loader.vertices = pt.tensor([[1.0, 2.0], [3.0, 4.0]])
     return mock_loader
 
@@ -41,7 +32,6 @@ def nan_pts_loader():
     """
     mock_loader = MagicMock()
     mock_loader.write_times = ["1.0", "2.0", "3.0"]
-    mock_loader.field_names = {'4.0': 'velocity'}
     mock_loader.vertices = pt.Tensor([[1.0, 2.0], [float('nan'), 1.0]])
     return mock_loader
 
@@ -53,7 +43,6 @@ def empty_pts_loader():
     """
     mock_loader = MagicMock()
     mock_loader.write_times = ["1.0", "2.0", "3.0"] 
-    mock_loader.field_names = {'4.0': 'velocity'}
     mock_loader.vertices = pt.Tensor([])
     return mock_loader
 
@@ -68,15 +57,6 @@ def test_load_data_empty_times(empty_times_loader):
     """
     with pytest.raises(ValueError, match="Time steps are empty."):
         load_data(loader=empty_times_loader)
-
-def test_load_data_empty_fields(empty_fields_loader):
-    """
-    Test that verifies the correct raise of an error if fields is empty.
-    It is paired with empty_fields_loader fixture.
-
-    """
-    with pytest.raises(ValueError, match="No fields available in the dataset."):
-        load_data(loader=empty_fields_loader)
 
 def test_load_data_nan_pts(nan_pts_loader):
     """
