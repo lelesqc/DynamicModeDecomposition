@@ -1,7 +1,11 @@
 import torch as pt
 import pytest
-from data_processer import process_data
-from functions import find_optimal_rank
+import sys
+import os
+from DMD.data_processor import process_data
+from DMD.functions import find_optimal_rank
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 def test_finder_opt_rank_invalid_thr():
     """
@@ -17,7 +21,7 @@ def test_finder_opt_rank_invalid_thr():
     with pytest.raises(ValueError, match="Threshold must be less or equal than 100"):
         find_optimal_rank(s, 200) 
 
-  def test_find_optimal_rank():
+def test_find_optimal_rank():
     """
     Test that verifies correct optimal rank are computer through dummy singular values.
 
