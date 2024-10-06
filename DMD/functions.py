@@ -1,3 +1,5 @@
+import torch as pt
+
 def find_optimal_rank(s, thr):
     """
     Function that computes the optimal rank by evaluating singular values, based on chosen threshold.
