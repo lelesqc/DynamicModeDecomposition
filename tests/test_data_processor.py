@@ -1,8 +1,11 @@
-import pytest
 import torch as pt
-from data_loader import load_data
-from data_processor import process_data
-from data_processor import process_data
+import pytest
+import sys
+import os
+from DMD.data_loader import load_data
+from DMD.data_processor import process_data
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 def test_apply_mask_valid():
     """
