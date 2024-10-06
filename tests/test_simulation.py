@@ -1,8 +1,12 @@
+import sys
+import os
 from flowtorch.analysis import DMD
-from simulation import run_DMD
-from data_processor import process_data
+from DMD.simulation import run_DMD
+from DMD.data_processor import process_data
 from numpy import allclose
 from torch import complex128
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 def test_run_DMD_eigs():
     """
@@ -11,7 +15,7 @@ def test_run_DMD_eigs():
 
     """
     
-    eig_val, eig_vec, _, _ = run_DMD()
+    _, eig_val, eig_vec, _, _, _, _ = run_DMD()
     _, _, dt, data_matrix = process_data()
     
     dmd = DMD(data_matrix, dt=dt, rank = eig_val.size(0))
@@ -27,8 +31,7 @@ def test_run_DMD_modes():
     Comparison is made with built-in properties of flowtorch.analysis.DMD class.
 
     """
-    
-    _, _, phi, _ = run_DMD()
+    _, _, _, phi, _, _, _ = run_DMD()
     _, _, dt, data_matrix = process_data()
     
     dmd = DMD(data_matrix, dt=dt, rank = phi.size(1))
@@ -42,8 +45,7 @@ def test_run_DMD_reconstruction():
     Comparison is made with built-in properties of flowtorch.analysis.DMD class.
 
     """
-    
-    eig_val, _, _, reconstruction  = run_DMD()
+    _, eig_val, eig_vec, _, _, reconstruction, _ = run_DMD() 
     _, _, dt, data_matrix = process_data()
     
     dmd = DMD(data_matrix, dt=dt, rank = eig_val.size(0))
