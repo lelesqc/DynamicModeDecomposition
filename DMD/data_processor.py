@@ -1,7 +1,7 @@
 import torch as pt
-from data_loader import load_data
-from config import FIELD_NAME, MASK_LOWER_BOUND, MASK_UPPER_BOUND
 from flowtorch.data import mask_box
+from DMD.data_loader import load_data
+from DMD.config import FIELD_NAME, MASK_LOWER_BOUND, MASK_UPPER_BOUND
 
 def process_data():
     """
